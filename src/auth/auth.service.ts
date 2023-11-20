@@ -68,7 +68,6 @@ export class AuthService {
   }
 
   async refreshToken(User:any){
-    console.log(User);
     const user=await this.userService.findById(User.id);
     const oldRefreshToken=User.refreshToken.split(' ')[1];
     const dbStoredToken=user.refToken;

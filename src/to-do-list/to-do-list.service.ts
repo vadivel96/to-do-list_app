@@ -13,16 +13,13 @@ export class ToDoListService {
     async getAllTodolist(req:any): Promise<todolist[]> {
       const token=req.headers.authorization.split(' ')[1];
       const data=jwt.decode(token);
-      console.log(data);
         return await this.todolistModel.find({userid:data.id}).exec();
       }
 
       async createTodolist(todoData: TodolistDTO,req:any): Promise<todolist> {
         try {
-          console.log(todoData);
           const token=req.headers.authorization.split(' ')[1];
         const data=jwt.decode(token);
-        console.log(data);
         const todolist =await new this.todolistModel({...todoData,userid:data.id,email:data.email});
         return todolist.save();
         } catch (error) {

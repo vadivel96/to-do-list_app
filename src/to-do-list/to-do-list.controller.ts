@@ -17,7 +17,6 @@ export class ToDoListController {
     @UseGuards(JwtAuthGuard)
     @Post('/createTodolist')
     createTodolist(@Body() body:TodolistDTO,@Req() req:any){
-        console.log(body)
         return this.todolistservice.createTodolist(body,req);
     }
     
