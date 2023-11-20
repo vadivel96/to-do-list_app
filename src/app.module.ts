@@ -12,8 +12,8 @@ import { AuthModule } from './auth/auth.module';
   imports: [ConfigModule.forRoot({
     envFilePath:'.env',
     isGlobal:true
-  }),
-   MongooseModule.forRoot('mongodb+srv://vadivel:vadivel123@cluster0.kmcide7.mongodb.net/TO_DO_LIST_APP'),
+  }),//
+   MongooseModule.forRoot(process.env.DB_URI),
   ToDoListModule,
   UserModule,
   AuthModule],

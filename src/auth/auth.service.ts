@@ -28,8 +28,8 @@ export class AuthService {
         const hashedpassword=await this.hashPassword(password);
         user.password=hashedpassword;
         const payload={  username: user.firstName, email:user.email };
-        const accessToken=await this.jwt.signAsync(payload,{secret:"jwtConstants.secret",expiresIn:'1m'});
-        const refreshToken=await this.jwt.signAsync(payload,{secret:"RTConstants.secret",expiresIn:'2d'});
+        const accessToken=await this.jwt.signAsync(payload,{secret:process.env.secret,expiresIn:'1m'});
+        const refreshToken=await this.jwt.signAsync(payload,{secret:process.env.secret,expiresIn:'2d'});
         user.refToken=refreshToken;
        const newUser= await this.userService.createUser(user);
        
@@ -51,8 +51,8 @@ export class AuthService {
       const passwordMatch=await bcrypt.compare(password,existingUser.password);
         if(passwordMatch){
           const payload = { id: existingUser.id , username: existingUser.firstName, email:existingUser.email };
-          const accessToken=await this.jwt.signAsync(payload,{secret:"jwtConstants.secret",expiresIn:'1m'});
-          const refreshToken=await this.jwt.signAsync(payload,{secret:"RTConstants.secret",expiresIn:'2d'});
+          const accessToken=await this.jwt.signAsync(payload,{secret:process.env.secret,expiresIn:'1m'});
+          const refreshToken=await this.jwt.signAsync(payload,{secret:process.env.secret,expiresIn:'2d'});
           await this.userService.updateById(payload.id,{refToken:refreshToken})
         return {
          accessToken,
@@ -74,10 +74,10 @@ export class AuthService {
     const dbStoredToken=user.refToken;
     if(oldRefreshToken===dbStoredToken){
       const newRefreshToken=await this.jwt.signAsync({id:User.id,email:User.email,userName:User.firstName},
-        {secret:"RTConstants.secret",expiresIn:'2d'});
+        {secret:process.env.secret,expiresIn:'2d'});
         
       const newAccessToken=await this.jwt.signAsync({id:User.id,email:User.email,userName:User.firstName},
-        {secret:"jwtConstants.secret",expiresIn:'1m'});
+        {secret:process.env.secret,expiresIn:'1m'});
       await this.userService.updateById(User.id,{refToken:newRefreshToken});
     
       return{
