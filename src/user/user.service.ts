@@ -4,12 +4,18 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { user } from 'src/schema/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-
+import * as bcrypt from 'bcrypt';
+import { ToDoListService } from 'src/to-do-list/to-do-list.service';
 
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel('user') private userModel:Model<user> ){}
+  constructor(@InjectModel('user') private userModel:Model<user> ,private todolistSerice:ToDoListService  ){}
+
+  async hashPassword(password:string):Promise<String>{ 
+    let salt=await bcrypt.genSalt(10);
+    return await bcrypt.hash(password,salt);
+  }
 
   async createUser(user: CreateUserDto) {   
       const newuser=new this.userModel(user);
@@ -32,11 +38,15 @@ export class UserService {
   }
 
   async updateById(id:String,body:UpdateUserDto):Promise<any>{
+    if(body.password){
+    body.password=  await this.hashPassword(body.password)
+    }
     const updateUser=await this.userModel.findByIdAndUpdate(id,body,{new:true});
     return updateUser;
   }
 
   async deleteById(id:String):Promise<any>{
+    await this.todolistSerice.deleteAllTodolist(id);
     return  this.userModel.deleteOne({_id:id});
   }
 }

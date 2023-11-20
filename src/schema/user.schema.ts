@@ -6,6 +6,7 @@ export const userSchema = new mongoose.Schema({
   lastName:String,
   email: {type:String,required:true},
   password: String,
+  refToken:String
  
 });
 
@@ -14,6 +15,7 @@ export interface user extends mongoose.Document {
   lastName:String;
   email:String;
   password: String;
+  refToken:any;
   
 } 
 

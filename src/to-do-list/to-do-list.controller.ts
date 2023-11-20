@@ -41,5 +41,11 @@ export class ToDoListController {
         return this.todolistservice.deleteTodolist(id);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Delete('/deleteAllTodolist/:id')
+    deleteAllTodolist(@Param('id')id:String){
+        return this.todolistservice.deleteAllTodolist(id);
+    }
+
 
 }

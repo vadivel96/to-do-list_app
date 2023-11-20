@@ -7,6 +7,7 @@ import { todolistSchema } from 'src/schema/to-do-list.schema';
 @Module({
   imports:[MongooseModule.forFeature([{name:'todolist',schema:todolistSchema}])],
   providers: [ToDoListService],
-  controllers: [ToDoListController]
+  controllers: [ToDoListController],
+  exports:[ToDoListService]
 })
 export class ToDoListModule {}

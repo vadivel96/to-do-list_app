@@ -13,8 +13,8 @@ export class ToDoListService {
     async getAllTodolist(req:any): Promise<todolist[]> {
       const token=req.headers.authorization.split(' ')[1];
       const data=jwt.decode(token);
-      console.log(data.email);
-        return await this.todolistModel.find({email:data.email}).exec();
+      console.log(data);
+        return await this.todolistModel.find({userid:data.id}).exec();
       }
 
       async createTodolist(todoData: TodolistDTO,req:any): Promise<todolist> {
@@ -22,7 +22,8 @@ export class ToDoListService {
           console.log(todoData);
           const token=req.headers.authorization.split(' ')[1];
         const data=jwt.decode(token);
-        const todolist =await new this.todolistModel({...todoData,email:data.email});
+        console.log(data);
+        const todolist =await new this.todolistModel({...todoData,userid:data.id,email:data.email});
         return todolist.save();
         } catch (error) {
           console.log(error);
@@ -43,7 +44,11 @@ export class ToDoListService {
       }
 
       async deleteTodolist(id:String):Promise<any>{
-        return  this.todolistModel.deleteOne({_id:id});
+        return await this.todolistModel.deleteOne({_id:id});
+      }
+
+      async deleteAllTodolist(id:String):Promise<any>{
+        return await this.todolistModel.deleteMany({userid:id})
       }
 
 }
